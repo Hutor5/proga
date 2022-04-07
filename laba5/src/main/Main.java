@@ -16,9 +16,5 @@ public class Main {
         } else{
             System.out.println("Указанный файл не существует. Вы можете загрузить файл с помощью команды загрузки");
         }
-
-//        InputManager consoleManager = new ConsoleInputManager();
-//        CommandManager commandManager = new CommandManager(collectionManager,consoleManager,fileManager);
-//        commandManager.consoleMode();
     }
 }
