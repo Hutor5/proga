@@ -10,11 +10,12 @@ public class Main {
     public static void main(String[] args) {
         FileManager fileManager = new FileManager();
         CollectionManager<HumanBeing> collectionManager = new HumanBeingCollectionManager();
-        if (args.length!=0){
+        if (args.length != 0) {
             fileManager.setPath(args[0]);
             collectionManager.fromJsonCollection(fileManager.read());
-        } else{
+        } else {
             System.out.println("Указанный файл не существует. Вы можете загрузить файл с помощью команды загрузки");
         }
+
     }
 }

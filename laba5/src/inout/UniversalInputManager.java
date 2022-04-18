@@ -178,4 +178,5 @@ public abstract class UniversalInputManager implements InputManager{
     }
 
     public void readCommand(){}
+
 }

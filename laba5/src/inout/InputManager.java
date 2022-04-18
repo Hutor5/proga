@@ -42,4 +42,6 @@ public interface InputManager {
     HumanBeing readHumanBeing() throws WrongDataException;
 
     public Scanner getScanner();
+
+    public void readCommand();
 }
