@@ -1,5 +1,6 @@
 package inout;
 
+import commands.Wrap;
 import data.Car;
 import data.Coordinates;
 import data.HumanBeing;
@@ -43,5 +44,5 @@ public interface InputManager {
 
     public Scanner getScanner();
 
-    public void readCommand();
+    public Wrap readCommand();
 }

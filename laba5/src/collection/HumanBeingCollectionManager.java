@@ -7,10 +7,12 @@ import data.HumanBeing;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import com.google.gson.*;
 
-import data.HumanBeing;
+import data.WeaponType;
+import json.*;
 
 public class HumanBeingCollectionManager implements CollectionManager<HumanBeing> {
     private TreeSet<HumanBeing> collection;
@@ -18,7 +20,7 @@ public class HumanBeingCollectionManager implements CollectionManager<HumanBeing
     private HashSet<Integer> uniqIDs;
 
     public HumanBeingCollectionManager(){
-        collection = new TreeSet<>();
+        collection = new TreeSet<HumanBeing>();
         initTime = java.time.LocalDateTime.now();
         uniqIDs = new HashSet<>();
     }
@@ -53,8 +55,11 @@ public class HumanBeingCollectionManager implements CollectionManager<HumanBeing
     public void add(HumanBeing humanBeing) {
         humanBeing.setId(generateID());
         collection.add(humanBeing);
-        System.out.println("Добавленный элемент:");
+        //boolean ok = collection.add(humanBeing);
+        System.out.println("Добавленный элемент:"); //+ ok);
         System.out.println(humanBeing.toString());
+        //System.out.println(toJsonCollection());
+        //return ok;
     }
 
     @Override
@@ -81,7 +86,7 @@ public class HumanBeingCollectionManager implements CollectionManager<HumanBeing
             if (humanBeing.getId() == id){
                 humanBeing.setId(id);
                 //collection.put(idx);
-                System.out.println("element #"+Integer.toString(id)+" successfully updated");
+                System.out.println("Элемент №"+Integer.toString(id)+" успешно обновлён");
             }
             idx += 1;
         }
@@ -100,14 +105,17 @@ public class HumanBeingCollectionManager implements CollectionManager<HumanBeing
 
     @Override
     public void removeLower(HumanBeing humanBeing) {
-
+        for (HumanBeing humanBeing1: collection){
+            if (humanBeing.getImpactSpeed()>humanBeing1.getImpactSpeed()) removeByID(humanBeing.getId());
+        }
     }
 
     @Override
     public void addIfMin(HumanBeing humanBeing) {
-        for (HumanBeing HumanBeing : collection){
-            if (humanBeing.compareTo(HumanBeing)==1){
-                System.err.println("Невозможно добавить");
+        for (HumanBeing humanBeing1: collection){
+            if (humanBeing.compareTo(humanBeing1)==1){
+                System.out.println("Невозможно добавить");
+                return;
             }
         }
         add(humanBeing);
@@ -115,45 +123,78 @@ public class HumanBeingCollectionManager implements CollectionManager<HumanBeing
 
     @Override
     public void printElementsWithSoundtrackName(String soundtrackName) {
-
+        LinkedList<HumanBeing> list = new LinkedList<>();
+        for (HumanBeing humanBeing : collection){
+            if (humanBeing.getSoundtrackName().equals(soundtrackName.trim())){
+                list.add(humanBeing);
+            }
+        }
+        if (list.isEmpty()) System.out.println("Нет элементов, содержащих " + soundtrackName);
+        else{
+            System.out.println("Содержит: " + soundtrackName);
+            for (HumanBeing humanBeing: list){
+                System.out.println(humanBeing.toString());
+            }
+        }
     }
 
     @Override
     public void printElementsWithName(String name) {
-
+        LinkedList<HumanBeing> list = new LinkedList<>();
+        for (HumanBeing humanBeing : collection){
+            if (humanBeing.getName().contains(name.trim())){
+                list.add(humanBeing);
+            }
+        }
+        if (list.isEmpty()) System.out.println("Нет элементов, содержащих " + name);
+        else{
+            System.out.println("Содержит: " + name);
+            for (HumanBeing humanBeing: list){
+                System.out.println(humanBeing.toString());
+            }
+        }
     }
 
     @Override
     public void printFieldDescendingWeaponType() {
-
+        //LinkedList<WeaponType> list = new LinkedList<>();
+        for (HumanBeing humanBeing: collection){
+            System.out.println(humanBeing.getWeaponType());
+        }
+        //list.sort();
     }
 
     @Override
     public boolean fromJsonCollection(String json) {
-        boolean success = true;
+        boolean luck = true;
         try {
             if (json == null || json.equals("")){
                 collection =  new TreeSet<HumanBeing>();
             } else {
                 Type collectionType = new TypeToken<TreeSet<HumanBeing>>(){}.getType();
-//                Gson gson = new GsonBuilder()
-//                        .registerTypeAdapter(collectionType, new CollectionDeserializer(uniqIDs))
-//                        .create();
-//                collection = gson.fromJson(json.trim(), collectionType);
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(LocalDate.class, new LocalDateDeserializer())
+                        .registerTypeAdapter(Date.class, new DateDeserializer())
+                        .registerTypeAdapter(collectionType, new CollectionDeserializer(uniqIDs))
+                        .create();
+                collection = gson.fromJson(json.trim(), collectionType);
             }
         } catch (JsonParseException e){
-            success = false;
+            luck = false;
             System.err.println("Неправильный json файл");
         }
-        return success;
+        return luck;
     }
 
     @Override
     public String toJsonCollection() {
         if (collection == null || collection.isEmpty()) return "";
-//        Gson gson = new GsonBuilder()
-//                .setPrettyPrinting().create();
-//        String json = gson.toJson(collection);
-//        return json;
+        Gson gson = new GsonBuilder()
+                //.registerTypeAdapter(LocalDate.class, new LocalDateSerializer())
+                .registerTypeAdapter(ZonedDateTime.class, new DateSerializer())
+                .setPrettyPrinting().create();
+        String json = gson.toJson(collection);
+        return json;
     }
+
 }

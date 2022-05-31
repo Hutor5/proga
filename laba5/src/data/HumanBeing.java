@@ -1,6 +1,9 @@
 package data;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class HumanBeing implements Collectionable{
@@ -22,6 +25,7 @@ public class HumanBeing implements Collectionable{
         this.coordinates = coordinates;
         LocalDateTime now = LocalDateTime.now();
         ZonedDateTime creationDate = now.atZone(ZoneId.systemDefault());
+        this.creationDate = creationDate;
         this.realHero = realHero;
         this.hasToothpick = hasToothpick;
         this.impactSpeed = impactSpeed;
@@ -51,9 +55,14 @@ public class HumanBeing implements Collectionable{
         return soundtrackName;
     }
 
+    public WeaponType getWeaponType(){
+        return weaponType;
+    }
+
     @Override
     public int compareTo(Collectionable humanBeing) {
-        return 0;
+        int ok = Double.compare(this.impactSpeed, humanBeing.getImpactSpeed());
+        return ok;
     }
 
     @Override
@@ -67,5 +76,31 @@ public class HumanBeing implements Collectionable{
         minutesOfWaiting!=null &&
         weaponType!=null &&
         car!=null);
+    }
+
+    @Override
+    public Double getImpactSpeed() {
+        return impactSpeed;
+    }
+
+    @Override
+    public String toString() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy - HH:mm:ss Z");
+        String formattedDate = creationDate.format(formatter);
+        String s = "";
+        s += "{\n";
+        s += "  \"id\" : " + Integer.toString(id) + ",\n";
+        s += "  \"name\" : " + "\"" + name + "\"" + ",\n";
+        s += "  \"coordinates\" : " + coordinates.toString() + ",\n";
+        s += "  \"creationDate\" : " + "\"" + formattedDate + "\"" + ",\n";
+        s += "  \"realHero\" : " + "\"" + Boolean.toString(realHero) + "\"" + ",\n";
+        s += "  \"hasToothpick\" : " + "\"" + hasToothpick + "\"" + ",\n";
+        s += "  \"impactSpeed\" : " + "\"" + Double.toString(impactSpeed) + "\"" + ",\n";
+        s += "  \"soundtrackName\" : " + "\"" + soundtrackName + "\"" + ",\n";
+        s += "  \"minutesOfWaiting\" : " + "\"" + Integer.toString(minutesOfWaiting) + "\"" + ",\n";
+        s += "  \"weaponType\" : " + "\"" + weaponType.toString() + "\"" + ",\n";
+        if (car!=null) s += "  \"car\" : " + "\"" + car.toString()+ "\"" + "\n";
+        s += "}";
+        return s;
     }
 }

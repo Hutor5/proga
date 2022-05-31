@@ -1,5 +1,6 @@
 package inout;
 
+import commands.Wrap;
 import data.Car;
 import data.Coordinates;
 import data.HumanBeing;
@@ -177,6 +178,15 @@ public abstract class UniversalInputManager implements InputManager{
         this.scanner=scanner;
     }
 
-    public void readCommand(){}
-
+    public Wrap readCommand(){
+        String cmd = scanner.nextLine();
+        if (cmd.contains(" ")){
+            String arr [] = cmd.split(" ",2);
+            cmd = arr[0];
+            String arg = arr[1];
+            return new Wrap(cmd,arg);
+        } else {
+            return new Wrap(cmd);
+        }
+    }
 }

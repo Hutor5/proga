@@ -14,4 +14,6 @@ public interface Collectionable extends Comparable<Collectionable>, Validateable
     int compareTo(Collectionable human);
 
     boolean validate();
+
+    Double getImpactSpeed();
 }

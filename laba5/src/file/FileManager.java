@@ -8,12 +8,10 @@ public class FileManager implements ReadWriteAble {
         private FileReader fileReader;
         private String path;
 
-        public FileManager(String pth){
-            path = pth;
+        public FileManager(String path){
+            this.path = path;
         }
-        public void setPath(String pth){
-            path = pth;
-        }
+        public void setPath(String path){this.path = path;}
 
         public FileManager(){
             path = null;

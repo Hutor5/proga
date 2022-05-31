@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 public class ConsoleInputManager extends UniversalInputManager{
-    public ConsoleInputManager(Scanner scanner) {
+    public ConsoleInputManager() {
         super(new Scanner(System.in));
         getScanner().useDelimiter("\n");
     }
